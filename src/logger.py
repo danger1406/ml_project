@@ -18,7 +18,7 @@ logging.basicConfig(
     format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 
-
+# This argument sets the threshold for the logger. Only log messages with a severity level equal to or higher than this will be recorded.
 )
 
 if __name__=="__main__":
