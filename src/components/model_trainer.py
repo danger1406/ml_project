@@ -1,0 +1,1 @@
+#Components are the modules that we are specifically going to use in the project. 
