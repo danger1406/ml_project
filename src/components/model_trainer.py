@@ -5,7 +5,7 @@ import sys
 from dataclasses import dataclass
 # For every file we will write a config file so that we can create the paths that are needed
 from catboost import CatBoostRegressor
-from sklearn.ensemble import (AdaBoostClassifier,GradientBoostingClassifier,RandomForestRegressor)
+from sklearn.ensemble import (AdaBoostRegressor,GradientBoostingRegressor,RandomForestRegressor)
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
@@ -36,16 +36,56 @@ class ModelTrainer:
                 test_array[:,-1]
             )
             models = {
-            "Linear Regression": LinearRegression(),
-            "K-Neighbors Regressor": KNeighborsRegressor(),
             "Decision Tree": DecisionTreeRegressor(),
             "Random Forest Regressor": RandomForestRegressor(),
+            "GradientBoosting Regressor":GradientBoostingRegressor(),
+            "Linear Regression": LinearRegression(),
             "XGBRegressor": XGBRegressor(), 
             "CatBoosting Regressor": CatBoostRegressor(verbose=False),  # 'verbose' controls the amount of logging output during training. Setting verbose=False disables training logs.
+            "AdaBoost Regressor":AdaBoostRegressor(),
+            # "K-Neighbors Regressor": KNeighborsRegressor(),
+            }
+            
+            params={
+                "Decision Tree": {
+                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    # 'splitter':['best','random'],
+                    # 'max_features':['sqrt','log2'],
+                },
+                "Random Forest Regressor":{
+                    # 'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                 
+                    # 'max_features':['sqrt','log2',None],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "GradientBoosting Regressor":{
+                    # 'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
+                    'learning_rate':[.1,.01,.05,.001],
+                    'subsample':[0.6,0.7,0.75,0.8,0.85,0.9],
+                    # 'criterion':['squared_error', 'friedman_mse'],
+                    # 'max_features':['auto','sqrt','log2'],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "Linear Regression":{},
+                "XGBRegressor":{
+                    'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                },
+                "CatBoosting Regressor":{
+                    'depth': [6,8,10],
+                    'learning_rate': [0.01, 0.05, 0.1],
+                    'iterations': [30, 50, 100]
+                },
+                "AdaBoost Regressor":{
+                    'learning_rate':[.1,.01,0.5,.001],
+                    # 'loss':['linear','square','exponential'],
+                    'n_estimators': [8,16,32,64,128,256]
+                }
+                
             }
             # Now we will create a function that evaluates the data for each model and gives the ouput 
             
-            model_report:dict=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
+            model_report:dict=evaluate_models(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models,param=params)
             # The function will be created in utils file
             
             # We will take the best score of all the models that we have tested 
