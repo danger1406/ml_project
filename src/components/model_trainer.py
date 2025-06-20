@@ -96,7 +96,7 @@ class ModelTrainer:
             
             best_model=models[best_model_name]
             
-            if best_model_score<0.6:
+            if best_model_score<0.6: #less than 60% of the accuracy means there is no good model 
                 raise CustomException("No best model found")
             logging.info("Completed training and testing of data and found the model")
             

@@ -1,0 +1,1 @@
+This is mainly done to tell the elastic bean stack what is the entry point of your application 
